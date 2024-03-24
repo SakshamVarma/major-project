@@ -5,6 +5,9 @@ const cors = require("cors");
 const { createServer } = require("node:http");
 const { Server } = require("socket.io");
 const { v4: uuid } = require("uuid");
+const connectToMongoose=require('./connectDB');
+
+connectToMongoose();
 
 dotenv.config();
 const app = express();
@@ -19,6 +22,7 @@ const io = new Server(server, {
 });
 
 app.use(cors());
+app.use('/api/auth',require('./auth'));
 
 const users = {
   user1: {

@@ -7,11 +7,17 @@ import DrawWrapper from "./page/DrawWrapper.tsx";
 import Draw from "./page/Draw.tsx";
 import { DrawContextProvider } from "./context/DrawContext.tsx";
 import Login from "./components/Login.tsx";
+import LoginPage from "./components/LoginPage.tsx";
+import SignUpPage from "./components/SignUpPage.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/auth",
-    element: <Login />,
+    element: <LoginPage />,
+  },
+  {
+    path: "/signup",
+    element: <SignUpPage />,
   },
   {
     path: "/home",
