@@ -49,11 +49,11 @@ const UsersModal: React.FC<{}> = ({}) => {
   return (
     <Modal isOpen={usersModal} onClose={closeWindowHandler}>
       <div className="h-full w-[500px] p-2">
-        <h1 className=" text-center text-xl font-bold">Users</h1>
+        <h1 className=" text-center text-xl font-bold mb-4">Users</h1>
         {collaborators.map((user) => (
           <div
             key={user}
-            className=" hover:cursor-pointer flex justify-between"
+            className="bg-blue-100 hover:bg-blue-300 border border-blue-700 rounded-md px-2 py-1 mb-1 cursor-pointer flex flex-row justify-between items-center"
             onClick={() => giveAccessHandler(user)}
           >
             <span>{user}</span>

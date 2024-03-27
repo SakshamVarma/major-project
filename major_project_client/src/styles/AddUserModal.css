@@ -1,0 +1,36 @@
+/* styles.css */
+.modal-container {
+    @apply h-full w-[500px] p-2;
+  }
+  
+  .info-box {
+    @apply border-2 border-black w-full mb-2 p-2;
+  }
+  
+  .input-container {
+    @apply flex;
+  }
+  
+  .input-field {
+    @apply border-2 border-black w-full p-2;
+  }
+  
+  .add-user-button {
+    @apply bg-blue-500 text-white font-bold py-2 px-4 mx-1 rounded;
+  }
+  .copy-button {
+    @apply bg-blue-500 text-white font-bold mb-2 p-2 py-1 px-4 mx-1 my-0 rounded;
+  }
+  
+  .collaborator {
+    @apply bg-blue-100 hover:bg-blue-300 border border-blue-700 rounded-md px-2 py-1 my-1 cursor-pointer;
+  }
+  
+  .share-button {
+    @apply bg-blue-700 text-white font-bold mb-2 p-2 py-2 px-4 mx-1 my-0 rounded;
+  }
+  
+  .cancel-button {
+    @apply bg-blue-700 text-white font-bold mb-2 p-2 py-2 px-4 mx-1 my-0 rounded;
+  }
+  

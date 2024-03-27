@@ -23,12 +23,12 @@ const StickyNotes: React.FC<NotesType> = ({ setValue, value }) => {
       } z-40 border-2 border-black`}
     >
       <div
-        className={`h-8 bg-cyan-800 flex justify-end items-center gap-2 p-2 ${
+        className={`h-8 bg-blue-500 flex justify-end items-center gap-2 p-2 ${
           !minimised && "border-b-2"
         } border-black`}
       >
         <button
-          className="h-5 w-5 bg-orange-500 border-2 border-black rounded-full flex items-center justify-center opacity-70 "
+          className="h-5 w-5 bg-red-500 border-2 border-black rounded-full flex items-center justify-center"
           onClick={(e) => minimiseHandler(e)}
         >
           {/* <VscChromeMinimize /> */}-

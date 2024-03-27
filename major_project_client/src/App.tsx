@@ -3,11 +3,13 @@ import JoinRoomForm from "./components/JoinRoomForm";
 import { useEffect, useState } from "react";
 import { User, BASE_URL } from "./Util";
 import axios from "axios";
+import "./styles/App.css"; // Import the CSS file
 
 function App() {
   const [username, setUsername] = useState<string>("");
   const [id, setId] = useState<string>("");
   const navigate = useNavigate();
+
   useEffect(() => {
     const _user = sessionStorage.getItem(User.username);
     const _id = sessionStorage.getItem(User.userId);
@@ -36,13 +38,21 @@ function App() {
       console.log(err);
     }
   };
+
   return (
-    <div>
-      <h1>hi {username}</h1>
-      <button onClick={createNewRoom}>Create room</button>
-      <br />
-      <br />
-      <JoinRoomForm />
+    <div className="flex justify-center items-center h-screen">
+      <div className="container">
+        <h1 className="title">hi {username}</h1>
+        <button
+          className="button"
+          onClick={createNewRoom}
+        >
+          Create room
+        </button>
+        <br />
+        <br />
+        <JoinRoomForm />
+      </div>
     </div>
   );
 }

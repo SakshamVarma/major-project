@@ -13,7 +13,7 @@ import SignUpPage from "./components/SignUpPage.tsx";
 const router = createBrowserRouter([
   {
     path: "/auth",
-    element: <LoginPage />,
+    element: <Login />,
   },
   {
     path: "/signup",
