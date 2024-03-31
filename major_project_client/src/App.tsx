@@ -47,7 +47,7 @@ function App() {
           className="button"
           onClick={createNewRoom}
         >
-          Create room
+          Create Document
         </button>
         <br />
         <br />

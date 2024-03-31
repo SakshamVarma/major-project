@@ -16,11 +16,11 @@ const Login = () => {
       name: "saksham",
       password: "saksham",
     },
-    user3: {
-      id: "user3",
-      name: "csrai",
-      password: "csrai",
-    },
+    // user3: {
+    //   id: "user3",
+    //   name: "csrai",
+    //   password: "csrai",
+    // },
   };
 
   const handleClick = (id: string) => {
@@ -35,7 +35,7 @@ const Login = () => {
       <br />
       <button onClick={() => handleClick("user2")}>saksham</button>
       <br />
-      <button onClick={() => handleClick("user3")}>csrai</button>
+      {/* <button onClick={() => handleClick("user3")}>csrai</button> */}
     </div>
   );
 };

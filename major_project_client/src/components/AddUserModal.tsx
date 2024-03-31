@@ -64,7 +64,7 @@ const AddUserModal: React.FC<{}> = ({}) => {
     <div className="modal-container">
     <div className="input-container">
       <div className="info-box">
-        <span className="font-bold">RoomId: </span>
+        <span className="font-bold">DocumentId: </span>
         {canvasState.docId}
       </div>
       <button

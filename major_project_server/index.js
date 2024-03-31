@@ -5,9 +5,9 @@ const cors = require("cors");
 const { createServer } = require("node:http");
 const { Server } = require("socket.io");
 const { v4: uuid } = require("uuid");
-const connectToMongoose=require('./connectDB');
+// const connectToMongoose=require('./connectDB');
 
-connectToMongoose();
+// connectToMongoose();
 
 dotenv.config();
 const app = express();
@@ -35,11 +35,11 @@ const users = {
     name: "saksham",
     password: "saksham",
   },
-  user3: {
-    id: "user3",
-    name: "csrai",
-    password: "csrai",
-  },
+  // user3: {
+  //   id: "user3",
+  //   name: "csrai",
+  //   password: "csrai",
+  // },
 };
 
 const findUser = async (usernames) => {

@@ -31,7 +31,7 @@ const JoinRoomForm = () => {
   return (
     <form className="form-container" onSubmit={formSubmitHandler}>
       <label htmlFor="" className="form-label">
-        Enter room id
+        Enter Document id
       </label>
       <input
         type="text"
