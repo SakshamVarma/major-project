@@ -1,21 +1,29 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { BASE_URL } from "../Util";
 
 export default function SignUpPage() {
+  const navigate = useNavigate();
 
-  const [credentails, setCredentails] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-  const onCredentialChange = (e: any) => {
-    setCredentails({
-      ...credentails,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleLogin = () => {
-    console.log(credentails);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("In handleSubmit");
+    console.log('username',{ username, password });
+    try {
+      await axios.post(`${BASE_URL}/api/auth/signup`, { username, password });
+      // Registration successful, you can redirect the user or display a success message
+      console.log('User registered successfully');
+      navigate("/login");
+    } catch (err) {
+      // Handle registration error
+      setError('Registration failed. Please try again.');
+      console.error('Registration error:', err.response.data.errorr);
+    }
   };
 
   return (
@@ -35,25 +43,8 @@ export default function SignUpPage() {
                 type="text"
                 id="name"
                 name="name"
-                onChange={onCredentialChange}
-                value={credentails.name}
-                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-              />
-            </div>
-
-            <div className="relative mb-4 w-full">
-              <label
-                htmlFor="email"
-                className="leading-7 text-sm text-gray-600"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                onChange={onCredentialChange}
-                value={credentails.email}
+                onChange={(e) => setUsername(e.target.value)}
+                value={username}
                 className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
               />
             </div>
@@ -68,12 +59,12 @@ export default function SignUpPage() {
                 type="password"
                 id="password"
                 name="password"
-                onChange={onCredentialChange}
-                value={credentails.password}
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
                 className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
               />
             </div>
-            <button onClick={handleLogin} className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
+            <button onClick={handleSubmit} className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
               SIGN UP
             </button>
           </div>

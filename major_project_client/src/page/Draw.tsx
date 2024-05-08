@@ -18,7 +18,7 @@ import DragNDrop from "../components/DragNDrop";
 import jsPDF from "jspdf";
 
 const Draw = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const   canvasRef = useRef<HTMLCanvasElement>(null);
   const username = sessionStorage.getItem(User.username);
   //   const countRef = useRef<number>(2);
   // const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
@@ -65,6 +65,7 @@ const Draw = () => {
 
   //   const dispatch = useDispatch();
 
+  //use to load image to canvas
   const drawOnCanvas = (url: any) => {
     ctxRef.current?.clearRect(0, 0, window.innerWidth, window.innerHeight);
     const img = new Image();
@@ -125,6 +126,7 @@ const Draw = () => {
   const exitDocHandler = async () => {
     try {
       const docId = sessionStorage.getItem(User.docId);
+      //We need to save the doc after exiting not delete the doc
       const res = await axios.post(`${BASE_URL}/deleteDoc`, {
         user: {
           docId,

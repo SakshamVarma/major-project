@@ -10,18 +10,18 @@ function App() {
   const [id, setId] = useState<string>("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const _user = sessionStorage.getItem(User.username);
-    const _id = sessionStorage.getItem(User.userId);
+  // useEffect(() => {
+  //   const _user = sessionStorage.getItem(User.username);
+  //   const _id = sessionStorage.getItem(User.userId);
 
-    if (!_user || !_id) {
-      navigate("/auth");
-      return;
-    }
+  //   if (!_user || !_id) {
+  //     navigate("/auth");
+  //     return;
+  //   }
 
-    setUsername(_user);
-    setId(_id);
-  }, []);
+  //   setUsername(_user);
+  //   setId(_id);
+  // }, []);
 
   const createNewRoom = async () => {
     try {

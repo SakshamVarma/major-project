@@ -9,11 +9,16 @@ import { DrawContextProvider } from "./context/DrawContext.tsx";
 import Login from "./components/Login.tsx";
 import LoginPage from "./components/LoginPage.tsx";
 import SignUpPage from "./components/SignUpPage.tsx";
+import AuthCheck from './AuthCheck';
 
 const router = createBrowserRouter([
   {
-    path: "/auth",
-    element: <Login />,
+    path: '/',
+    element: (
+      <AuthCheck>
+        <App />
+      </AuthCheck>
+    ),
   },
   {
     path: "/login",
