@@ -29,6 +29,7 @@ const AddUserModal: React.FC<{}> = ({}) => {
 
   const shareWithUserHandler = async () => {
     try {
+      console.log('Collaborators:',collaborators);
       await axios.post(`${BASE_URL}/addCollaborator/${canvasState.docId}`, {
         user: {
           usernames: collaborators,

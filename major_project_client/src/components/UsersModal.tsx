@@ -18,7 +18,7 @@ const UsersModal: React.FC<{}> = ({}) => {
   };
 
   const giveAccessHandler = async (user: string) => {
-    const username = sessionStorage.getItem(User.username);
+    const username = localStorage.getItem(User.username);
     try {
       if (canvasState.editor !== username && canvasState.creater !== username) {
         console.log(username, canvasState.editor, canvasState.creater);

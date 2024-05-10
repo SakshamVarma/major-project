@@ -6,10 +6,10 @@ import "./index.css";
 import DrawWrapper from "./page/DrawWrapper.tsx";
 import Draw from "./page/Draw.tsx";
 import { DrawContextProvider } from "./context/DrawContext.tsx";
-import Login from "./components/Login.tsx";
 import LoginPage from "./components/LoginPage.tsx";
 import SignUpPage from "./components/SignUpPage.tsx";
 import AuthCheck from './AuthCheck';
+import Login from "./components/Login.tsx";
 
 const router = createBrowserRouter([
   {
@@ -21,23 +21,45 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/auth",
+    element: (
+      <AuthCheck>
+        <Login />
+      </AuthCheck>
+    ),
+  },
+  {
     path: "/login",
-    element: <LoginPage />,
+    element: (
+      <AuthCheck>
+        <LoginPage />
+      </AuthCheck>
+    ),
   },
   {
     path: "/signup",
-    element: <SignUpPage />,
+    element: (
+      <AuthCheck>
+        <SignUpPage />
+      </AuthCheck>
+    ),
   },
   {
     path: "/home",
-    element: <App />,
+    element: (
+      <AuthCheck>
+        <App />
+      </AuthCheck>
+    ),
   },
   {
     path: "/doc",
     element: (
-      <DrawContextProvider>
-        <DrawWrapper />
-      </DrawContextProvider>
+      <AuthCheck>
+        <DrawContextProvider>
+          <DrawWrapper />
+        </DrawContextProvider>
+      </AuthCheck>
     ),
     children: [
       {

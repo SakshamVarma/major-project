@@ -18,7 +18,7 @@ const JoinRoomForm = () => {
     try {
       await axios.post(`${BASE_URL}/joinDoc/${id}`, {
         user: {
-          username: sessionStorage.getItem(User.username),
+          username: localStorage.getItem(User.username),
         },
       });
       sessionStorage.setItem(User.docId, id);

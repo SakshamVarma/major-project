@@ -49,7 +49,7 @@ const DrawWrapper = () => {
           console.log("user is connected on client");
         });
 
-        const userId = sessionStorage.getItem(User.userId);
+        const userId = localStorage.getItem(User.userId);
         const docId = sessionStorage.getItem(User.docId);
         socket.emit("join_custom_room", { userId, docId });
 

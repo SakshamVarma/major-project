@@ -19,7 +19,7 @@ import jsPDF from "jspdf";
 
 const Draw = () => {
   const   canvasRef = useRef<HTMLCanvasElement>(null);
-  const username = sessionStorage.getItem(User.username);
+  const username = localStorage.getItem(User.username);
   //   const countRef = useRef<number>(2);
   // const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
   const [moving, setMoving] = useState<boolean>(false);
@@ -288,7 +288,7 @@ const Draw = () => {
       socket.on("updated_canvas_status", (canvasState: CanvasStateType) => {
         let found = false;
         canvasState.collaborators.forEach((user) => {
-          const username = sessionStorage.getItem(User.username);
+          const username = localStorage.getItem(User.username);
           if (user === username) found = true;
         });
 
@@ -532,7 +532,7 @@ const Draw = () => {
           <button
             onClick={() => {
               askForWriteAccessHandler(
-                sessionStorage.getItem(User.username) || ""
+                localStorage.getItem(User.username) || ""
               );
             }}
           >

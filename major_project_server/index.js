@@ -6,6 +6,7 @@ const { createServer } = require("node:http");
 const { Server } = require("socket.io");
 const { v4: uuid } = require("uuid");
 const connectToMongoose=require('./connectDB');
+const User = require('./Models/User');
 
 connectToMongoose();
 
@@ -51,6 +52,18 @@ const findUser = async (usernames) => {
     if (!usersfound) reject(false);
     resolve(true);
   });
+};
+
+const checkUserExistence = async (usernames) => {
+  try {
+    const users = await User.find({ username: { $in: usernames } });
+    if (users.length !== usernames.length) {
+      return false;
+    }
+    return true;
+  } catch (error) {
+    throw new Error("Error checking user existence");
+  }
 };
 
 const documents = {};
@@ -138,8 +151,9 @@ app.post("/addCollaborator/:docId", async (req, res, next) => {
     const docId = req.params.docId;
     const usernames = req.body.user.usernames;
     console.log(usernames);
-    let usersExist = await findUser(usernames);
-
+    // let usersExist = await findUser(usernames);
+    let usersExist = await checkUserExistence(usernames);
+    
     if (!usersExist) {
       throw new Error("Some users do not exist");
     }

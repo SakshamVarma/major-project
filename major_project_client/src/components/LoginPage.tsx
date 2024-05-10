@@ -13,14 +13,16 @@ export default function LoginPage() {
   const [error, setError] = useState('');
 
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    //e.preventDefault();
     try {
       const response = await axios.post(`${BASE_URL}/api/auth/login`, { username, password });
-      const { token } = response.data;
+      const { token, userId } = response.data;
 
       // Store the token (e.g., in localStorage or an HTTP-only cookie)
       localStorage.setItem('token', token);
+      localStorage.setItem('username', username);
+      localStorage.setItem('userId', userId);
 
       // Redirect the user or perform any other necessary actionsnavigate("/home");
       console.log('Login successful');
@@ -71,8 +73,7 @@ export default function LoginPage() {
         <button
           onClick={handleSubmit}
           className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
-        >
-          
+        > 
           LOGIN
         </button>
       </div>

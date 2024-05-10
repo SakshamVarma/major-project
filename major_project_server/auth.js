@@ -25,7 +25,7 @@ router.post("/signup", async (req, res) => {
         await user.save();
     
         res.json({ message: 'User registered successfully' });
-        
+
       } catch (err) {
         if (err.code === 11000) {
             // Duplicate username error
@@ -59,13 +59,29 @@ router.post("/login", async (req, res) => {
     if (!passwordValid) {
       return res.status(401).json({ error: "password incorrect" });
     }
-
-    const token = jwt.sign({ username }, secret);
-    res.status(200).json({ token });
+    const userId = user._id.toString();
+    console.log('userId',userId);
+    const token = jwt.sign({ username, userId }, secret);
+    res.status(200).json({ token, userId });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
   }
+});
+
+router.post('/validate-token', (req, res) => {
+  const { token } = req.body;
+
+  // Verify the JWT token
+  jwt.verify(token, secret, (err, decoded) => {
+    if (err) {
+      // Token is invalid
+      return res.status(401).json({ isValid: false, error: 'Invalid token' });
+    }
+
+    // Token is valid
+    return res.status(200).json({ isValid: true });
+  });
 });
 
 
