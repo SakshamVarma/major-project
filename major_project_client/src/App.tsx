@@ -60,7 +60,7 @@ function App() {
       <header className="bg-blue-600 text-white py-2 px-6">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center">
-            <img src="./src/assets/inkpen.svg" alt="pen" className="w-10 h-10 mr-2 rounded-full" />
+            <img src="/assets/inkpen.svg" alt="pen" className="w-10 h-10 mr-2 rounded-full" />
             <h1 className="text-2xl font-bold ml-5">IdeaInk</h1>
           </div>
           {/* Profile Icon */}
@@ -127,7 +127,7 @@ function App() {
           {/* Column 2: Image */}
           <div>
             <img
-              src="../src/assets/meeting-vector.jpg"
+              src="/assets/meeting-vector.jpg"
               alt="Your Image"
               className="max-w-full"
               loading="eager"
