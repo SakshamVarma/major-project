@@ -10,6 +10,7 @@ import LoginPage from "./components/LoginPage.tsx";
 import SignUpPage from "./components/SignUpPage.tsx";
 import AuthCheck from './AuthCheck';
 import Login from "./components/Login.tsx";
+import { ToastContainer } from "react-toastify";
 
 const router = createBrowserRouter([
   {
@@ -33,15 +34,17 @@ const router = createBrowserRouter([
     element: (
       <AuthCheck>
         <LoginPage />
+        <ToastContainer position="bottom-right" />
       </AuthCheck>
     ),
   },
   {
     path: "/signup",
     element: (
-      <AuthCheck>
+      <div>
         <SignUpPage />
-      </AuthCheck>
+        <ToastContainer position="bottom-right" />
+      </div>
     ),
   },
   {
@@ -49,6 +52,7 @@ const router = createBrowserRouter([
     element: (
       <AuthCheck>
         <App />
+        <ToastContainer position="bottom-right" />
       </AuthCheck>
     ),
   },

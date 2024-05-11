@@ -126,15 +126,18 @@ const Draw = () => {
   const exitDocHandler = async () => {
     try {
       const docId = sessionStorage.getItem(User.docId);
-      //We need to save the doc after exiting not delete the doc
-      const res = await axios.post(`${BASE_URL}/deleteDoc`, {
-        user: {
-          docId,
-        },
-      });
+      const confirmExit = window.confirm("Are you sure you want to exit?"); // Show confirmation dialog box
+      if (confirmExit) {
+        // Proceed with exiting
+        const res = await axios.post(`${BASE_URL}/deleteDoc`, {
+          user: {
+            docId,
+          },
+        });
 
-      sessionStorage.removeItem(User.docId);
-      navigate("/home");
+        sessionStorage.removeItem(User.docId);
+        navigate("/home");
+      } 
     } catch (err) {
       console.log(err);
     }
@@ -326,7 +329,7 @@ const Draw = () => {
       {colorModal && <ColorWindow />}
       {addUserModal && <AddUserModal />}
       {usersModal && <UsersModal />}
-      <div className=" absolute top-0 m-auto bg-blue-500 text-white flex justify-between items-center p-4 w-full">
+      <div className=" absolute top-0 m-auto bg-blue-500 text-white flex justify-between items-center p-5 w-full">
         {/* Pen */}
         {username === canvasState?.editor && (
           <button
@@ -499,14 +502,16 @@ const Draw = () => {
         {username === canvasState?.editor && (
           <button
             onClick={() => {
-              ctxRef.current.clearRect(
-                0,
-                0,
-                window.innerWidth,
-                window.innerHeight
-              );
-
-              moveEndHandler();
+              const confirmClear = window.confirm("Are you sure you want to clear the canvas?");
+              if (confirmClear) {
+                ctxRef.current.clearRect(
+                  0,
+                  0,
+                  window.innerWidth,
+                  window.innerHeight
+                );
+                moveEndHandler();
+              }
             }}
           >
             <svg
@@ -594,7 +599,7 @@ const Draw = () => {
             ></path>
           </svg>
         </button>
-        {/* Leave */}
+        {/* Leav}e */}
         <button onClick={exitDocHandler}>
           <svg
             width="15"

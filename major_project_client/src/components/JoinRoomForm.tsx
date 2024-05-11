@@ -3,6 +3,8 @@ import { BASE_URL, User } from "../Util";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/JoinRoomForm.css"; // Import the CSS file
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const JoinRoomForm = () => {
   const [id, setId] = useState<string>("");
@@ -11,7 +13,7 @@ const JoinRoomForm = () => {
   const formSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (id.length === 0) {
-      alert("id is empty");
+      toast.error('DocId cannot be empty.');
       return;
     }
 
@@ -24,6 +26,7 @@ const JoinRoomForm = () => {
       sessionStorage.setItem(User.docId, id);
       navigate(`/doc/${id}`);
     } catch (err) {
+      toast.error('Error joining document. Please try again.');
       console.log(err);
     }
   };
@@ -37,9 +40,9 @@ const JoinRoomForm = () => {
         type="text"
         value={id}
         onChange={(e) => setId(e.target.value)}
-        className="form-input"
+        className={`form-input shadow-lg hover:border-blue-500 ${id.length > 0 ? 'border-blue-500' : ''}`}
       />
-      <input type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-5 rounded" />
+      <input type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-5 rounded shadow-lg" />
     </form>
   );
 };
