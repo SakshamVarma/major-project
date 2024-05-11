@@ -5,7 +5,7 @@ export const User = {
   docId: "docId"
 };
 
-export const BASE_URL = "http://localhost:5000";
+export const BASE_URL = "https://ideaink.onrender.com";
 
 export const penColors = [
     "#020617", // black

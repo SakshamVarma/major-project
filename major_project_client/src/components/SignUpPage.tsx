@@ -19,9 +19,16 @@ export default function SignUpPage() {
       try {
         await axios.post(`${BASE_URL}/api/auth/signup`, { username, password });
         // Registration successful, you can redirect the user or display a success message
-        console.log('User registered successfully');
+        const response = await axios.post(`${BASE_URL}/api/auth/login`, { username, password });
+        const { token, userId } = response.data;
+        // Store the token (e.g., in localStorage or an HTTP-only cookie)
+        localStorage.setItem('token', token);
+        localStorage.setItem('username', username);
+        localStorage.setItem('userId', userId);
         toast.success('Registration successful');
-        navigate("/login");
+        console.log('User registered successfully');
+        setTimeout(() => {  navigate("/home"); }, 2000);
+        //navigate("/home");
       } catch (err) {
         // Handle registration error
         toast.error('Registration failed. Please try again.');
