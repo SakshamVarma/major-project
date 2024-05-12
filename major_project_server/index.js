@@ -82,6 +82,8 @@ app.post("/createDoc", async (req, res, next) => {
       editor: username,
       collaborators: [username],
     };
+    //push docId to specific user in mongodb
+    await User.findOneAndUpdate({ username: username }, { $push: { docIds: docId } });
 
     documents[docId] = docInfo;
     return res.status(200).json(docInfo);
@@ -196,6 +198,20 @@ app.post("/giveAccess/:id", (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }
+});
+
+app.get("/getDocIds", async (req, res, next) => {
+  try {
+    //retrieve docids from mongodb
+    const userId = req.query.userId;
+    //console.log(req);
+    //console.log("userID",userId);
+    const user = await User.findById(userId);
+    //console.log(user.docIds);
+    res.status(200).json(user.docIds);
+  } catch (err) {
+    console.log(err);
   }
 });
 

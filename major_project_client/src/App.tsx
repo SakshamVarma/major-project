@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import JoinRoomForm from "./components/JoinRoomForm";
+import DocListModal from "./components/DocListModal";
 import { useEffect, useState } from "react";
 import { User, BASE_URL } from "./Util";
 import axios from "axios";
@@ -12,6 +13,31 @@ function App() {
   const [id, setId] = useState<string>("");
   const navigate = useNavigate();
   const [showProfile, setShowProfile] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [documentIds, setDocumentIds] = useState<string[]>([]);
+
+  const openModal = async () => {
+    //fetch document ids from mongo db
+    setShowProfile(!showProfile);
+    const response = await axios.get(`${BASE_URL}/getDocIds`, {
+      params: {
+        userId: localStorage.getItem("userId"),
+      },
+    });
+    console.log("getdocids", response.data);
+    setDocumentIds(response.data);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleDocumentClick = (docId: string) => {
+    // Perform desired action with the document ID
+    console.log(`Document ${docId} clicked`);
+    // You can add additional logic here, such as fetching data or navigating to a specific page
+  };
 
   const handleLogout = () => {
     // Implement your logout logic here
@@ -91,7 +117,13 @@ function App() {
                     Hello {username}
                   </span>
                   <span
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                    className="block px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100"
+                    onClick={openModal}
+                  >
+                    History
+                  </span>
+                  <span
+                    className="block px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100 cursor-pointer"
                     onClick={handleLogout}
                   >
                     Logout
@@ -134,6 +166,12 @@ function App() {
             />
           </div>
         </div>
+        <DocListModal
+          isOpen={isModalOpen}
+          onRequestClose={closeModal}
+          documentIds={documentIds}
+          handleDocumentClick={handleDocumentClick}
+        />
       </main>
     </div>
   );
