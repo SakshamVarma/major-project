@@ -11,31 +11,44 @@ export default function SignUpPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    //e.preventDefault();
-    console.log("In handleSubmit");
-    console.log('username', { username, password });
-    if (username && password) {
-      try {
-        await axios.post(`${BASE_URL}/api/auth/signup`, { username, password });
-        // Registration successful, you can redirect the user or display a success message
-        const response = await axios.post(`${BASE_URL}/api/auth/login`, { username, password });
-        const { token, userId } = response.data;
-        // Store the token (e.g., in localStorage or an HTTP-only cookie)
-        localStorage.setItem('token', token);
-        localStorage.setItem('username', username);
-        localStorage.setItem('userId', userId);
-        toast.success('Registration successful');
-        console.log('User registered successfully');
-        setTimeout(() => {  navigate("/home"); }, 2000);
-        //navigate("/home");
-      } catch (err) {
-        // Handle registration error
-        toast.error('Registration failed. Please try again.');
-        console.error('Registration error:', err.response.data.errorr);
-      }
-    } else {
+  const handleSubmit = async () => {
+    // Validate username
+    if (!username || !password) {
       toast.error('Fields cannot be empty.');
+      return;
+    }
+
+    const usernameRegex = /^[a-zA-Z0-9]+$/;
+    if (!usernameRegex.test(username)) {
+      toast.error('Username should only contain alphabets and numbers.');
+      return;
+    }
+
+    // Validate password
+    if (password.length < 8) {
+      toast.error('Password should be at least 8 characters long.');
+      return;
+    }
+
+    try {
+      // Attempt registration
+      await axios.post(`${BASE_URL}/api/auth/signup`, { username, password });
+
+      // Registration successful, log in the user
+      const response = await axios.post(`${BASE_URL}/api/auth/login`, { username, password });
+      const { token, userId } = response.data;
+      
+      // Store the token (e.g., in localStorage or an HTTP-only cookie)
+      localStorage.setItem('token', token);
+      localStorage.setItem('username', username);
+      localStorage.setItem('userId', userId);
+
+      toast.success('Registration successful');
+      navigate("/home");
+    } catch (err) {
+      // Handle registration error
+      toast.error('Registration failed. Please try again.');
+      console.error('Registration error:', err.response.data.error);
     }
   };
 
@@ -77,7 +90,10 @@ export default function SignUpPage() {
             className="w-full bg-white rounded border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
           />
         </div>
-        <button onClick={handleSubmit} className="text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-700 rounded text-lg">
+        <button 
+          onClick={handleSubmit} 
+          className="text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-700 rounded text-lg"
+        >
           SIGN UP
         </button>
         <p className="mt-5 text-base text-gray-600">
