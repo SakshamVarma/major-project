@@ -5,8 +5,13 @@ const cors = require("cors");
 const { createServer } = require("node:http");
 const { Server } = require("socket.io");
 const { v4: uuid } = require("uuid");
-const connectToMongoose=require('./connectDB');
+const connectToMongoose = require('./connectDB');
 const User = require('./Models/User');
+const axios = require('axios');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const genAI = new GoogleGenerativeAI(process.env.GEM_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+const OPENAI_API_KEY = process.env.OPENAI_KEY;
 
 connectToMongoose();
 
@@ -22,7 +27,7 @@ const io = new Server(server, {
 });
 
 app.use(cors());
-app.use('/api/auth',require('./auth'));
+app.use('/api/auth', require('./auth'));
 
 const users = {
   user1: {
@@ -148,14 +153,11 @@ app.post("/getCanvasState/:id", (req, res, next) => {
 
 app.post("/addCollaborator/:docId", async (req, res, next) => {
   try {
-    // findUser is an abstract function
-    // All of the logic should be part of transaction
     const docId = req.params.docId;
     const usernames = req.body.user.usernames;
     console.log(usernames);
-    // let usersExist = await findUser(usernames);
     let usersExist = await checkUserExistence(usernames);
-    
+
     if (!usersExist) {
       throw new Error("Some users do not exist");
     }
@@ -215,6 +217,27 @@ app.get("/getDocIds", async (req, res, next) => {
   }
 });
 
+app.post('/getChatMessages', async (req, res) => {
+  const { prompt } = req.body;
+  try {
+    // Send user message to OpenAI API
+    if (prompt) {
+      const result = await model.generateContent(prompt);
+      const response = result.response;
+      const answer = response.text();
+      console.log(answer);
+
+      res.json({ userMessage: prompt, aiResponse: answer });
+    }
+    else {
+      res.status(400).json({ message: "Please provide prompt" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+});
+
 app.use((err, req, res, next) => {
   console.log(err);
   res.status(400).json(err.message);
@@ -222,15 +245,7 @@ app.use((err, req, res, next) => {
 
 io.on("connection", (socket) => {
   console.log("user is connected", socket.id);
-  //   console.log(socket.handshake.auth.TOKEN);
-  //   console.log(socket.request.headers.userId);
-  //   const room = socket.request.headers.userId;
-  //   socket.join("customRoom");
   socket.on("join_custom_room", ({ userId, docId }) => {
-    // if (documents[docId].creater === userId) {
-    //   console.log("joined room: ", docId);
-    //   socket.join(docId);
-    // }
     console.log("User joined room");
     socket.join(docId);
     const canvas = documents[docId]?.canvas;
@@ -240,10 +255,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("leave_custom_room", ({ userId, docId }) => {
-    // if (documents[docId].creater === userId) {
-    //   console.log("left room: ", docId);
-    //   socket.leave(docId);
-    // }
     console.log("user left room");
     socket.leave(docId);
   });

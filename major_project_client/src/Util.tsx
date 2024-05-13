@@ -31,3 +31,9 @@ export interface CanvasStateType  {
   collaborators: string[];
   docId: string;
 }
+
+export interface ChatMessage {
+  id: string;
+  message: string;
+  sender: string;
+}

@@ -16,12 +16,11 @@ import UsersModal from "../components/UsersModal";
 import StickyNotes from "../components/StickeyNotes";
 import DragNDrop from "../components/DragNDrop";
 import jsPDF from "jspdf";
+import ChatOverlay from "../components/ChatOverlay";
 
 const Draw = () => {
   const   canvasRef = useRef<HTMLCanvasElement>(null);
   const username = localStorage.getItem(User.username);
-  //   const countRef = useRef<number>(2);
-  // const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
   const [moving, setMoving] = useState<boolean>(false);
   const [cord, setCord] = useState<{ x: number; y: number }>({
     x: 0,
@@ -34,6 +33,43 @@ const Draw = () => {
 
   const pagesArrayRef = useRef<string[]>([]);
   const currentPageRef = useRef<number>(0);
+
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+  const [chatMessages, setChatMessages] = useState<{ userMessage: string; aiResponse: string }[]>([]);
+
+  const openOverlay = () => {
+    setIsOverlayOpen(true);
+  };
+
+  const closeOverlay = () => {
+    setIsOverlayOpen(false);
+  };
+
+  const sendMessage = async (message: string) => {
+    try {
+      // Send the message to your backend API
+      const response = await fetch(`${BASE_URL}/getChatMessages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt: message }),
+      });
+
+      const data = await response.json();
+      console.log('Response:', data);
+
+      if (response.ok) {
+        // Update the chat messages state with the new message and response
+        setChatMessages((prevMessages) => [...prevMessages, data]);
+      } else {
+        console.error('Error:', data.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
 
   const navigate = useNavigate();
   const drawContext = React.useContext(DrawContext);
@@ -53,19 +89,7 @@ const Draw = () => {
     showNotes,
     setShowNotes,
   } = drawContext;
-  // console.log("Pen width: ", penWidth);
-  // console.log("Color: ", color);
 
-  //   const [url, setUrl] = useState<string>("");
-  //   const [notes, setNotes] = useState<string[]>([]);
-  //   const [imgUrls, setImgUrls] = useState<string[]>([]);
-
-  //   const { penColor, penWidth, undoRedoTracker, createNotesToggle, imgUrl } =
-  //     useSelector((state: RootState) => state.tool);
-
-  //   const dispatch = useDispatch();
-
-  //use to load image to canvas
   const drawOnCanvas = (url: any) => {
     ctxRef.current?.clearRect(0, 0, window.innerWidth, window.innerHeight);
     const img = new Image();
@@ -108,10 +132,6 @@ const Draw = () => {
 
   const moveEndHandler = () => {
     const url = canvasRef.current?.toDataURL();
-    // console.log(url);
-    // if (url) {
-    //   dispatch(updateUndoRedoTracker(url));
-    // }
     if (!url) return;
 
     setMoving(false);
@@ -194,7 +214,6 @@ const Draw = () => {
       if (!src) return;
       img.src = src.toString();
       img.onload = function () {
-        // Clear canvas before drawing the new image
         ctxRef.current.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
         // Draw the image on the canvas
@@ -216,26 +235,20 @@ const Draw = () => {
   const downloadPdfHandler = () => {
     const doc = new jsPDF();
 
-    // Add canvas content to PDF
     if (!canvasRef.current) return;
     const canvasImg = canvasRef.current.toDataURL("image/png");
-    // doc.addImage(canvasImg, "PNG", 0, 0, window.innerWidth, window.innerHeight);
     doc.addImage(canvasImg, 10, 10, 180, 120);
 
     const margin = 10;
-    const maxWidth = 180; // Maximum width for text wrapping
+    const maxWidth = 180; 
     const lineHeight = 10;
 
-    // Split text into lines
     const lines = doc.splitTextToSize(value, maxWidth - margin * 2);
 
-    // Calculate total height of text
     const textHeight = lines.length * lineHeight;
 
-    // Add text to PDF with proper wrapping
     doc.text(lines, margin, 150, { maxWidth: maxWidth });
 
-    // Download the PDF
     doc.save("content.pdf");
   };
 
@@ -252,8 +265,6 @@ const Draw = () => {
       const x = rect.left + window.scrollX;
       const y = rect.top + window.scrollY;
 
-      // temp.lineWidth = penWidth;
-      // temp.strokeStyle = color;
       temp.lineWidth = 4;
       temp.strokeStyle = penColors[0];
       ctxRef.current = temp;
@@ -265,13 +276,10 @@ const Draw = () => {
 
       pagesArrayRef.current.push(canvasRef.current.toDataURL());
 
-      //   const url = canvasRef.current.toDataURL();
-      //   dispatch(initialiseUndoRedoTracker(url));
     }
 
     console.log(canvasState);
   }, []);
-  // }, [penWidth, color]);
 
   useEffect(() => {
     const canvasAndSocket = () => {
@@ -360,7 +368,6 @@ const Draw = () => {
           <button
             onClick={() => {
               ctxRef.current.strokeStyle = "#fff";
-              // ctxRef.current.strokeStyle = "#f8fafc";
               ctxRef.current.lineWidth = 10;
             }}
           >
@@ -599,6 +606,25 @@ const Draw = () => {
             ></path>
           </svg>
         </button>
+        {/* ChatModal */}
+        <button onClick={openOverlay}>
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 15 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M2 1C1.44772 1 1 1.44772 1 2V13C1 13.5523 1.44772 14 2 14H13C13.5523 14 14 13.5523 14 13V9H13V13H2V2H13V6H14V2C14 1.44772 13.5523 1 13 1H2ZM4 4H11V5H4V4ZM4 7H11V8H4V7ZM4 10H9V11H4V10Z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              fillRule="evenodd"
+              clipRule="evenodd"
+            ></path>
+          </svg>
+        </button>
         {/* Leav}e */}
         <button onClick={exitDocHandler}>
           <svg
@@ -618,6 +644,12 @@ const Draw = () => {
             ></path>
           </svg>
         </button>
+        <ChatOverlay
+        isOpen={isOverlayOpen}
+        onClose={closeOverlay}
+        sendMessage={sendMessage}
+        chatMessages={chatMessages}
+      />
       </div>
       {showNotes && (
         // <div key={id} className=" w-40 h-40 bg-yellow-50">Hello world</div>
@@ -630,7 +662,6 @@ const Draw = () => {
         onMouseDown={(e) => moveStartHandler(e.clientX, e.clientY)}
         onMouseMove={(e) => moveHandler(e.clientX, e.clientY)}
         onMouseUp={(e) => moveEndHandler()}
-        // onMouseLeave={(e) => moveEndHandler()}
       ></canvas>
     </div>
   );
